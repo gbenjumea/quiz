@@ -19,14 +19,14 @@ exports.index = function(req, res) {
 
     models.Quiz.findAll({where: ["pregunta like ?", search],order: 'pregunta ASC'}).then(
       function(quizes){
-        res.render('quizes/index.ejs', {quizes: quizes});
+        res.render('quizes/index.ejs', {quizes: quizes, errors: []});
       }
     ).catch(function(error){next(error);});
 
   } else {
     models.Quiz.findAll().then(
       function(quizes){
-        res.render('quizes/index.ejs', {quizes: quizes});
+        res.render('quizes/index.ejs', {quizes: quizes, errors: []});
       }
     ).catch(function(error){next(error);});
 
@@ -37,7 +37,7 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
   models.Quiz.find(req.params.quizId).then(
     function(quiz){
-      res.render('quizes/show', {quiz: quiz});
+      res.render('quizes/show', {quiz: quiz, errors: []});
     }
   ).catch(function(error){next(error);});
 };
@@ -48,7 +48,7 @@ exports.answer = function(req, res) {
     if (req.query.respuesta === req.quiz.respuesta){
         resultado = 'Correcto';
     }
-    res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
+    res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
 // GET /quizes/new
@@ -56,15 +56,23 @@ exports.new = function(req, res) {
   var quiz = models.Quiz.build(  //crea objeto quiz
     {pregunta: "Pregunta", respuesta: "Respuesta"}
   );
-  res.render('quizes/new', {quiz: quiz});
+  res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 // GET /quizes/create
 exports.create = function(req, res) {
   var quiz = models.Quiz.build(req.body.quiz);
-
-  //guarda en DB los campos pregunta y respuesta de quiz
-  quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-    res.redirect('/quizes');
-  });
+  quiz
+  .validate()
+  .then(
+    function(err){
+    if(err) {
+      res.render('quizes/new', {quiz: quiz, errors: err.errors});
+    } else { 
+      //guarda en DB los campos pregunta y respuesta de quiz
+      quiz
+      .save({fields: ["pregunta", "respuesta"]})
+      .then(function(){ res.redirect('/quizes')})
+    }
+  }).catch(function(error){next(error)});
 };
