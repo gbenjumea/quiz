@@ -10,7 +10,7 @@
     "npm": "2.10.1"
   },
   "devDependencies": {
-    "sqlite3": "^3.0.8"
+    "sqlite3": "^3.0.9"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
@@ -19,11 +19,11 @@
     "ejs": "~0.8.5",
     "express": "~4.9.0",
     "express-partials": "^0.3.0",
+    "method-override": "^2.3.4",
     "morgan": "~1.3.0",
     "pg": "^4.4.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.5.1",
     "serve-favicon": "~2.1.3",
-    "sqlite3": "^3.0.9"
   }
 }
