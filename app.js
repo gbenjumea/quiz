@@ -57,3 +57,5 @@ app.use(function(err, req, res, next) {
         errors: []
     });
 });
+
+module.exports = app;

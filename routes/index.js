@@ -19,7 +19,7 @@ router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 
 /* GET author page*/
 router.get('/author', function(req, res) {
-res.render('author', { title: 'Quiz-creditos', errors: []});
+res.render('author', {errors: []});
 });
 
 router.get('/quizes/new', quizController.new);
