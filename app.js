@@ -43,6 +43,29 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Comprobacion de 2 minutos desde la ultima transaccion
+app.use(function(req, res, next) {
+    if(req.session.user){
+
+        // Comprueba si han pasado 2 minutos 
+        if( req.session.user.ultimaOperacion + 2*60*1000 <  new Date().getTime() ){
+        
+        // Comprueba si han pasado 10 seg para chequear mas rápido 
+        //if( req.session.user.ultimaOperacion + 1*10*1000 <  new Date().getTime() ){
+
+            // Destruye la sesión y redirige a /login
+            delete req.session.user;
+            res.redirect("/login");
+            return;
+        } else {
+
+            // Actualiza fecha ultima operacion con la hora actual en ms
+            req.session.user.ultimaOperacion= new Date().getTime(); 
+        }
+    } 
+    next();
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
